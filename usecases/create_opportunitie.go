@@ -4,9 +4,9 @@ import (
 	"github.com/Marcus-Nastasi/gopportunities/schemas"
 )
 
-func CreateOpportunitie(o schemas.Opening) (co schemas.Opening, err error) {
-	if err = db.Create(&co).Error; err != nil {
+func CreateOpportunitie(o schemas.Opening) (schemas.Opening, error) {
+	if err := db.Create(&o).Error; err != nil {
 		return schemas.Opening{}, err
 	}
-	return
+	return o, nil
 }
