@@ -14,12 +14,20 @@ var (
 )
 
 func GetHandler(ctx *gin.Context) {
-	ctx.JSON(200, map[string]string{"get": "all"})
+	o, err := usecases.GetOpportunities()
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, map[string]string{"status": "not found or error"})
+	}
+	ctx.JSON(http.StatusOK, o)
 }
 
 func GetSingleHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
-	ctx.JSON(200, map[string]string{"get": id})
+	o, err := usecases.GetOpportunitie(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, map[string]string{"status": "not found or error"})
+	}
+	ctx.JSON(http.StatusOK, o)
 }
 
 func CreateHandler(ctx *gin.Context) {
@@ -33,15 +41,26 @@ func CreateHandler(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
-	ctx.JSON(201, o)
+	ctx.JSON(http.StatusCreated, o)
 }
 
 func UpdateHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
-	ctx.JSON(200, map[string]string{"update": id})
+	var err error
+	var o schemas.Opening
+	err = ctx.BindJSON(&o)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	o, err = usecases.UpdateOpportunitie(id, o)
+	ctx.JSON(http.StatusOK, o)
 }
 
 func DeleteHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
-	ctx.JSON(200, map[string]string{"delete": id})
+	o, err := usecases.DeleteOpportunitie(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	ctx.JSON(http.StatusOK, o)
 }
