@@ -1,10 +1,18 @@
 package usecases
 
-import "github.com/Marcus-Nastasi/gopportunities/schemas"
+import (
+	"github.com/Marcus-Nastasi/gopportunities/config"
+	"github.com/Marcus-Nastasi/gopportunities/schemas"
+)
 
 func UpdateOpportunitie(id string, o schemas.Opening) (schemas.Opening, error) {
-	if err := db.Update(id, &o).Error; err != nil {
+	db := config.GetDb()
+	uo, err := GetOpportunitie(id)
+	if err != nil {
 		return schemas.Opening{}, err
 	}
-	return o, nil
+	if err := db.Model(&uo).Updates(o).Error; err != nil {
+		return schemas.Opening{}, err
+	}
+	return uo, nil
 }
