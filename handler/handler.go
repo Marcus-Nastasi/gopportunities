@@ -6,6 +6,7 @@ import (
 	"github.com/Marcus-Nastasi/gopportunities/config"
 	"github.com/Marcus-Nastasi/gopportunities/handler/input"
 	"github.com/Marcus-Nastasi/gopportunities/handler/mappers"
+	"github.com/Marcus-Nastasi/gopportunities/handler/output"
 	"github.com/Marcus-Nastasi/gopportunities/usecases"
 	"github.com/gin-gonic/gin"
 )
@@ -19,10 +20,11 @@ func GetHandler(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, map[string]string{"status": "not found or error"})
 	}
-	for _, v := range o {
-		mappers.MapFromDomain(&v)
+	res := make([]output.OpportunitieResponse, 0, len(o))
+	for i := range o {
+		res = append(res, mappers.MapFromDomain(&o[i]))
 	}
-	ctx.JSON(http.StatusOK, o)
+	ctx.JSON(http.StatusOK, res)
 }
 
 func GetSingleHandler(ctx *gin.Context) {
