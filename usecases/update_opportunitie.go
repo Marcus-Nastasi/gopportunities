@@ -11,7 +11,13 @@ func UpdateOpportunitie(id string, o schemas.Opening) (schemas.Opening, error) {
 	if err != nil {
 		return schemas.Opening{}, err
 	}
-	if err := db.Model(&uo).Updates(o).Error; err != nil {
+	uo.Role = o.Role
+	uo.Company = o.Company
+	uo.Location = o.Location
+	uo.Remote = o.Remote
+	uo.Link = o.Link
+	uo.Salary = o.Salary
+	if err := db.Save(&uo).Error; err != nil {
 		return schemas.Opening{}, err
 	}
 	return uo, nil
