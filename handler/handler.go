@@ -11,13 +11,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	logger *config.Logger = config.NewLogger("Handler")
-)
+var logger *config.Logger = config.NewLogger("Handler")
 
 type Handler struct {
 	getOpportunities *usecases.GetOpportunitiesUsecase
 	getOpportunitie *usecases.GetOpportunitieUsecase
+	createOpportunitie *usecases.CreateOpportunitieUsecase
 	updateOpportunitie *usecases.UpdateOpportunitieUsecase
 	deleteOpportunitie *usecases.DeleteOpportunitieUsecase
 }
@@ -25,12 +24,14 @@ type Handler struct {
 func NewHandler(
 	getOpportunities *usecases.GetOpportunitiesUsecase,
 	getOpportunitie *usecases.GetOpportunitieUsecase,
+	createOpportunitie *usecases.CreateOpportunitieUsecase,
 	updateOpportunitie *usecases.UpdateOpportunitieUsecase,
 	deleteOpportunitie *usecases.DeleteOpportunitieUsecase,
 ) *Handler {
 	return &Handler{
 		getOpportunities: getOpportunities,
 		getOpportunitie: getOpportunitie,
+		createOpportunitie: createOpportunitie,
 		updateOpportunitie: updateOpportunitie,
 		deleteOpportunitie: deleteOpportunitie,
 	}
@@ -51,21 +52,20 @@ func (h *Handler) GetHandler(ctx *gin.Context) {
 func (h *Handler) GetSingleHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 	o, err := h.getOpportunitie.GetOpportunitie(id)
-	//  usecases.GetOpportunitie(id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, map[string]string{"status": "not found or error"})
 	}
 	ctx.JSON(http.StatusOK, mappers.MapFromDomain(&o))
 }
 
-func CreateHandler(ctx *gin.Context) {
+func (h *Handler) CreateHandler(ctx *gin.Context) {
 	var opportunitie input.OpportunitieRequest
 	err := ctx.BindJSON(&opportunitie)
 	if err != nil {
 		logger.Errorf("Error binding json: %v", err)
 		ctx.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
-	o, err := usecases.CreateOpportunitie(mappers.MapToDomain(&opportunitie))
+	o, err := h.createOpportunitie.CreateOpportunitie(mappers.MapToDomain(&opportunitie))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
