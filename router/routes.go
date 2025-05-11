@@ -17,9 +17,9 @@ func routes(server *gin.Engine, h *handler.Handler) {
 		})
 
 		v1.GET("", h.GetHandler)
-		v1.GET("/:id", handler.GetSingleHandler)
+		v1.GET("/:id", h.GetSingleHandler)
 		v1.POST("", handler.CreateHandler)
-		v1.PATCH("/:id", handler.UpdateHandler)
-		v1.DELETE("/:id", handler.DeleteHandler)
+		v1.PATCH("/:id", h.UpdateHandler)
+		v1.DELETE("/:id", h.DeleteHandler)
 	}
 }

@@ -16,12 +16,23 @@ var (
 )
 
 type Handler struct {
-	getOpportunities *usecases.GetOpportunitieUsecase
+	getOpportunities *usecases.GetOpportunitiesUsecase
+	getOpportunitie *usecases.GetOpportunitieUsecase
+	updateOpportunitie *usecases.UpdateOpportunitieUsecase
+	deleteOpportunitie *usecases.DeleteOpportunitieUsecase
 }
 
-func NewHandler(getOpportunities *usecases.GetOpportunitieUsecase) *Handler {
+func NewHandler(
+	getOpportunities *usecases.GetOpportunitiesUsecase,
+	getOpportunitie *usecases.GetOpportunitieUsecase,
+	updateOpportunitie *usecases.UpdateOpportunitieUsecase,
+	deleteOpportunitie *usecases.DeleteOpportunitieUsecase,
+) *Handler {
 	return &Handler{
 		getOpportunities: getOpportunities,
+		getOpportunitie: getOpportunitie,
+		updateOpportunitie: updateOpportunitie,
+		deleteOpportunitie: deleteOpportunitie,
 	}
 }
 
@@ -37,9 +48,10 @@ func (h *Handler) GetHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func GetSingleHandler(ctx *gin.Context) {
+func (h *Handler) GetSingleHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
-	o, err := usecases.GetOpportunitie(id)
+	o, err := h.getOpportunitie.GetOpportunitie(id)
+	//  usecases.GetOpportunitie(id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, map[string]string{"status": "not found or error"})
 	}
@@ -60,7 +72,7 @@ func CreateHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, mappers.MapFromDomain(&o))
 }
 
-func UpdateHandler(ctx *gin.Context) {
+func (h *Handler) UpdateHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 	var err error
 	var o input.OpportunitieRequest
@@ -68,13 +80,13 @@ func UpdateHandler(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
-	updated, err := usecases.UpdateOpportunitie(id, mappers.MapToDomain(&o))
+	updated, err := h.updateOpportunitie.UpdateOpportunitie(id, mappers.MapToDomain(&o))
 	ctx.JSON(http.StatusOK, mappers.MapFromDomain(&updated))
 }
 
-func DeleteHandler(ctx *gin.Context) {
+func (h *Handler) DeleteHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
-	o, err := usecases.DeleteOpportunitie(id)
+	o, err := h.deleteOpportunitie.DeleteOpportunitie(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}

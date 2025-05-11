@@ -21,9 +21,13 @@ func main() {
 	}
 
 	// Initializing usecases
-	getOpportunities := usecases.NewGetOpportunitieUsecase(&db)
+	getOpportunities := usecases.NewGetOpportunitiesUsecase(&db)
+	getOpportunitie := usecases.NewGetOpportunitieUsecase(&db)
+	updateOpportunitie := usecases.NewUpdateOpportunitieUsecase(&db, getOpportunitie)
+	deleteOpportunitie := usecases.NewDeleteOpportunitieUsecase(&db, getOpportunitie)
+	
 	// Initializing Handler
-	handler := handler.NewHandler(getOpportunities)
+	handler := handler.NewHandler(getOpportunities, getOpportunitie, updateOpportunitie, deleteOpportunitie)
 
 	router.Initialize(handler)
 }

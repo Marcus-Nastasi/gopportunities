@@ -5,17 +5,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type GetOpportunitieUsecase struct {
+type GetOpportunitiesUsecase struct {
 	db *gorm.DB
 }
 
-func NewGetOpportunitieUsecase(db *gorm.DB) *GetOpportunitieUsecase {
-	return &GetOpportunitieUsecase{
+func NewGetOpportunitiesUsecase(db *gorm.DB) *GetOpportunitiesUsecase {
+	return &GetOpportunitiesUsecase{
 		db: db,
 	}
 }
 
-func (u *GetOpportunitieUsecase) GetOpportunities() ([]schemas.Opening, error) {
+func (u *GetOpportunitiesUsecase) GetOpportunities() ([]schemas.Opening, error) {
 	// db := config.GetDb()
 	var o []schemas.Opening
 	if err := u.db.Find(&o).Error; err != nil {
