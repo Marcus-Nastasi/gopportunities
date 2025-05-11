@@ -7,15 +7,15 @@ var (
 	logger *Logger
 )
 
-func Init() error {
+func Init() (gorm.DB, error) {
 	var err error
 	// initializing DB
 	db, err = connect()
 	if err != nil {
 		logger.Errorf("Error while initializing database: %v", err)
-		return err
+		return *db, err
 	}
-	return nil
+	return *db, nil
 }
 
 func GetDb() *gorm.DB {

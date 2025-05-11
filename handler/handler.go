@@ -15,8 +15,18 @@ var (
 	logger *config.Logger = config.NewLogger("Handler")
 )
 
-func GetHandler(ctx *gin.Context) {
-	o, err := usecases.GetOpportunities()
+type Handler struct {
+	getOpportunities *usecases.GetOpportunitieUsecase
+}
+
+func NewHandler(getOpportunities *usecases.GetOpportunitieUsecase) *Handler {
+	return &Handler{
+		getOpportunities: getOpportunities,
+	}
+}
+
+func (h *Handler) GetHandler(ctx *gin.Context) {
+	o, err := h.getOpportunities.GetOpportunities()
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, map[string]string{"status": "not found or error"})
 	}

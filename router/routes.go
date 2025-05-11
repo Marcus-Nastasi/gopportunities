@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func routes(server *gin.Engine) {
+func routes(server *gin.Engine, h *handler.Handler) {
 	server.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(200, map[string]string{"status": "pong"})
 	})
@@ -16,7 +16,7 @@ func routes(server *gin.Engine) {
 			ctx.JSON(200, map[string]string{"status": "ok"})
 		})
 
-		v1.GET("", handler.GetHandler)
+		v1.GET("", h.GetHandler)
 		v1.GET("/:id", handler.GetSingleHandler)
 		v1.POST("", handler.CreateHandler)
 		v1.PATCH("/:id", handler.UpdateHandler)
