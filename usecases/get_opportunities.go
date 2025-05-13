@@ -1,24 +1,23 @@
 package usecases
 
 import (
+	"github.com/Marcus-Nastasi/gopportunities/repository"
 	"github.com/Marcus-Nastasi/gopportunities/schemas"
-	"gorm.io/gorm"
 )
 
 type GetOpportunitiesUsecase struct {
-	db *gorm.DB
+	repo *repository.Repository
 }
 
-func NewGetOpportunitiesUsecase(db *gorm.DB) *GetOpportunitiesUsecase {
+func NewGetOpportunitiesUsecase(repo *repository.Repository) *GetOpportunitiesUsecase {
 	return &GetOpportunitiesUsecase{
-		db: db,
+		repo: repo,
 	}
 }
 
 func (u *GetOpportunitiesUsecase) GetOpportunities() ([]schemas.Opening, error) {
-	// db := config.GetDb()
-	var o []schemas.Opening
-	if err := u.db.Find(&o).Error; err != nil {
+	o, err := u.repo.GetOpportunities()
+	if err != nil {
 		return nil, err
 	}
 	return o, nil

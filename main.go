@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Marcus-Nastasi/gopportunities/config"
 	"github.com/Marcus-Nastasi/gopportunities/handler"
+	"github.com/Marcus-Nastasi/gopportunities/repository"
 	"github.com/Marcus-Nastasi/gopportunities/router"
 	"github.com/Marcus-Nastasi/gopportunities/usecases"
 )
@@ -20,12 +21,15 @@ func main() {
 		panic(err)
 	}
 
+	// Initializing repository
+	repo := repository.NewRepo(&db)
+
 	// Initializing usecases
-	getOpportunities := usecases.NewGetOpportunitiesUsecase(&db)
-	getOpportunitie := usecases.NewGetOpportunitieUsecase(&db)
-	createOpportunitie := usecases.NewCreateOpportunitieUsecase(&db)
-	updateOpportunitie := usecases.NewUpdateOpportunitieUsecase(&db, getOpportunitie)
-	deleteOpportunitie := usecases.NewDeleteOpportunitieUsecase(&db, getOpportunitie)
+	getOpportunities := usecases.NewGetOpportunitiesUsecase(&repo)
+	getOpportunitie := usecases.NewGetOpportunitieUsecase(&repo)
+	createOpportunitie := usecases.NewCreateOpportunitieUsecase(&repo)
+	updateOpportunitie := usecases.NewUpdateOpportunitieUsecase(&repo)
+	deleteOpportunitie := usecases.NewDeleteOpportunitieUsecase(&repo)
 
 	// Initializing Handler
 	handler := handler.NewHandler(getOpportunities, getOpportunitie, createOpportunitie, updateOpportunitie, deleteOpportunitie)
