@@ -40,7 +40,10 @@ func NewHandler(
 func (h *Handler) GetHandler(ctx *gin.Context) {
 	o, err := h.getOpportunities.GetOpportunities()
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, map[string]string{"status": "not found or error"})
+		ctx.JSON(http.StatusNotFound, map[string]string{"error": err.Error()})
+	}
+	if len(o) == 0 {
+		ctx.JSON(http.StatusNotFound, map[string]string{})
 	}
 	res := make([]output.OpportunitieResponse, 0, len(o))
 	for i := range o {
@@ -53,7 +56,10 @@ func (h *Handler) GetSingleHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 	o, err := h.getOpportunitie.GetOpportunitie(id)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, map[string]string{"status": "not found or error"})
+		ctx.JSON(http.StatusNotFound, map[string]string{"error": err.Error()})
+	}
+	if o.ID == 0 {
+		ctx.JSON(http.StatusNotFound, map[string]string{})
 	}
 	ctx.JSON(http.StatusOK, mappers.MapFromDomain(&o))
 }
