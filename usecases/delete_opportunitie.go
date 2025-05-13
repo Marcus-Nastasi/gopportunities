@@ -16,7 +16,6 @@ func NewDeleteOpportunitieUsecase(repo *repository.Repository) *DeleteOpportunit
 }
 
 func (u *DeleteOpportunitieUsecase) DeleteOpportunitie(id string) (schemas.Opening, error) {
-	// db := config.GetDb()
 	o, err := u.repo.DeleteOpportunitie(id)
 	if err != nil {
 		return schemas.Opening{}, err
