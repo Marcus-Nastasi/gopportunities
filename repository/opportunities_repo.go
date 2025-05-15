@@ -23,7 +23,6 @@ func (r *Repository) GetOpportunities() ([]schemas.Opening, error) {
 	return o, nil
 }
 
-
 func (r *Repository) GetOpportunitie(id string) (schemas.Opening, error) {
 	var o schemas.Opening
 	if err := r.db.Find(&o, id).Error; err != nil {
@@ -31,7 +30,6 @@ func (r *Repository) GetOpportunitie(id string) (schemas.Opening, error) {
 	}
 	return o, nil
 }
-
 
 func (r *Repository) CreateOpportunitie(o schemas.Opening) (schemas.Opening, error) {
 	if err := r.db.Create(&o).Error; err != nil {
