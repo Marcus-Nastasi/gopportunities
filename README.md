@@ -13,9 +13,6 @@ This is a microsservice application in Golang, developed to facilitate the regis
 ### Persistency
 - **Database**: PostgreSQL
 
-### Unit tests
-- **Tools**: JUnit and Mockito
-
 ## How to run
 Follow the steps below to set up and run the project on your local machine.
 
